@@ -1,5 +1,9 @@
 # Expense Tracker
 
+## Deployed URL
+
+[Expense Tracker](https://convinbackendtask-production.up.railway.app/)
+
 ## Overview
 
 This project is an Express.js application for managing and splitting expenses. It includes features for user authentication, expense tracking, and various methods for splitting expenses.
