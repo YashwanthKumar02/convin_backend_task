@@ -1,4 +1,4 @@
-# Project Name
+# Expense Tracker
 
 ## Overview
 
@@ -9,7 +9,6 @@ This project is an Express.js application for managing and splitting expenses. I
 - User registration and authentication
 - Expense creation with equal, exact, and percentage-based splits
 - PDF generation for balance sheets
-- Pagination and caching for performance optimization
 
 ## Prerequisites
 
@@ -43,9 +42,9 @@ Create a `.env` file in the root directory and add the following environment var
 
 ### 4. Start the Server
     
-    ```bash
+```bash
     npm run server
-    ```
+```
 
 ## API Endpoints
 
