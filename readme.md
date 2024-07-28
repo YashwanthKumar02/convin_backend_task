@@ -21,25 +21,25 @@ This project is an Express.js application for managing and splitting expenses. I
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/your-repository.git
-cd your-repository
+git clone https://github.com/YashwanthKumar02/convin_backend_task.git
+cd convin_backend_task
 ```
 
 ### 2. Install Dependencies
     
-    ```bash
+```bash
     npm install
-    ```
+```
 
 ### 3. Set Environment Variables
 
 Create a `.env` file in the root directory and add the following environment variables:
     
-    ```env
+```env
     PORT=3000
     MONGODB_URI=mongodb://localhost:27017/expense-tracker
     JWT_SECRET
-    ```
+```
 
 ### 4. Start the Server
     
