@@ -66,6 +66,7 @@ exports.calculateSplit = async (req, res) => {
 
 const pdf = require('pdfkit');
 
+//generate balance sheet of an expense with expense id for display
 exports.generateBalanceSheet = async (req, res) => {
     const { id } = req.params;
     
@@ -92,12 +93,117 @@ exports.generateBalanceSheet = async (req, res) => {
     
         expense.participants.forEach(participant => {
             doc.fontSize(16).text(`Name: ${participant.user.name}`);
+            console.log(`Participant name: ${participant.user.name}`);
             doc.fontSize(16).text(`Amount: ${participant.amount}`);
             doc.moveDown();
         });
+        console.log('PDF generated');
     
         doc.end();
         
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+const path = require('path');
+const fs = require('fs');
+
+//download balance sheet of an expense with expense id
+exports.downloadBalanceSheet = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const expense = await Expense.findById(id).populate('participants.user', 'name');
+
+        if (!expense) {
+            return res.status(404).json({ message: 'Expense not found' });
+        }
+
+        const doc = new pdf();
+        const filename = `balance-sheet-${expense._id}.pdf`;
+        const filePath = path.join(__dirname, '..', 'downloads', filename);
+
+        // Ensure the downloads directory exists
+        if (!fs.existsSync(path.join(__dirname, '..', 'downloads'))) {
+            fs.mkdirSync(path.join(__dirname, '..', 'downloads'));
+        }
+
+        doc.pipe(fs.createWriteStream(filePath)).on('finish', () => {
+            res.download(filePath, (err) => {
+                if (err) {
+                    console.error(err.message);
+                    return res.status(500).json({ message: 'Error downloading the file' });
+                }
+
+                // Clean up the file after download
+                fs.unlinkSync(filePath);
+            });
+        });
+
+        doc.fontSize(20).text(`Expense: ${expense.description}`);
+        doc.fontSize(16).text(`Total amount: ${expense.amount}`);
+        doc.fontSize(16).text(`Split type: ${expense.splitType}`);
+        doc.moveDown();
+
+        doc.fontSize(20).text('Participants:');
+        doc.moveDown();
+
+        expense.participants.forEach(participant => {
+            doc.fontSize(16).text(`Name: ${participant.user.name}`);
+            console.log(`Participant name: ${participant.user.name}`);
+            doc.fontSize(16).text(`Amount: ${participant.amount}`);
+            doc.moveDown();
+        });
+
+        doc.end();
+        console.log('PDF generated and saved to downloads folder');
+        
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+//retrieve individual expenses of participants with expense id
+exports.getIndividualExpenses = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const expense = await Expense.findById(id).populate('participants.user', 'name');
+
+        if (!expense) {
+            return res.status(404).json({ message: 'Expense not found' });
+        }
+
+        //store individual expenses in a json object
+        const individualExpenses = {"description": expense.description, "totalAmount": expense.amount};
+        expense.participants.forEach(participant => {
+            individualExpenses[participant.user.name] = participant.amount;
+        });
+
+        res.status(200).json(individualExpenses);
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+//retrieve total expense of an expense with expense id
+exports.getTotalExpense = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const expense = await Expense.findById(id);
+
+        if (!expense) {
+            return res.status(404).json({ message: 'Expense not found' });
+        }
+
+        res.status(200).json({totalAmount: expense.amount});
+
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ message: 'Server error' });
