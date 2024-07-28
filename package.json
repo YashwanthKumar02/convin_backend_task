@@ -4,7 +4,8 @@
   "description": "backend task",
   "main": "server.js",
   "scripts": {
-    "test": "node --watch server.js && echo 'Server is running on port 5000'"
+    "test": "node --watch server.js && echo 'Server is running on port 5000'",
+    "server": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.1",
+    "nodemon": "^3.1.4",
     "pdfkit": "^0.15.0"
   }
 }
