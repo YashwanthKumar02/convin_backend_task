@@ -20,7 +20,7 @@ router.get('/balancesheet/:id', generateBalanceSheet);
 // @route    GET /api/expenses/getbalancesheet/:id
 // @desc     Download balance sheet for an expense
 // @access   Private
-router.get('/getbalancesheet/:id', downloadBalanceSheet);
+router.get('/downloadsheet/:id', downloadBalanceSheet);
 
 // @route    GET /api/expenses/individual/:id
 // @desc     Retrieve individual expenses of participants with expense id
